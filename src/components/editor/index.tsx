@@ -17,6 +17,8 @@ import FontFamily from "@tiptap/extension-font-family";
 import TextStyle from "@tiptap/extension-text-style";
 import { useEditorStore } from "@/store/editorStore";
 import { HeaderTools } from "../header/headerTools";
+import { BubbleMenuComp } from "../menus/bubbleMenu";
+import Underline from "@tiptap/extension-underline";
 
 export function Editor() {
   const { setEditor } = useEditorStore();
@@ -54,7 +56,7 @@ export function Editor() {
         inline: true,
         allowBase64: true,
         HTMLAttributes: {
-          class: "rounded object-cover",
+          class: "rounded object-cover aspect-video",
         },
       }),
       TaskList,
@@ -63,6 +65,7 @@ export function Editor() {
       }),
       FontFamily,
       TextStyle,
+      Underline,
     ],
     editorProps: {
       attributes: {
@@ -86,9 +89,15 @@ export function Editor() {
       <HeaderTools />
       <EditorContent
         editor={tiptap}
+        id="editor-content"
         className={`prose prose-sm sm:prose-base xl:prose-lg 2xl:prose-xl prose-invert ${proseStyling} w-full`}
       />
-      {tiptap && <FloatingMenuComp editor={tiptap} />}
+      {tiptap && (
+        <>
+          <FloatingMenuComp editor={tiptap} />
+          <BubbleMenuComp editor={tiptap} />
+        </>
+      )}
     </main>
   );
 }

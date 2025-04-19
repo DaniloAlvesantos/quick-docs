@@ -6,6 +6,12 @@ import {
 import { FloatingMenu } from "@tiptap/react";
 
 export const FloatingMenuComp = (props: DefaultEditorWidgestProps) => {
+  const currentLineContent =
+    props.editor.state.selection.$from.nodeBefore?.textContent;
+  const textContent = currentLineContent?.startsWith("/")
+    ? currentLineContent.slice(1)
+    : currentLineContent;
+    
   return (
     <FloatingMenu
       editor={props.editor}
@@ -13,10 +19,17 @@ export const FloatingMenuComp = (props: DefaultEditorWidgestProps) => {
       shouldShow={({ state }) => {
         const { $from } = state.selection;
         const currentLine = $from.nodeBefore?.textContent;
-        return currentLine?.trim() === "/";
+
+        if (!currentLine || currentLine.trim() === "") {
+          return false;
+        }
+
+        return currentLine.startsWith("/") || currentLine.trim() === "/";
       }}
     >
-      {FloatingMenuData.map((button) => (
+      {FloatingMenuData.filter((val) =>
+        val.title.toLowerCase().includes(textContent?.toLowerCase() || "")
+      ).map((button) => (
         <FloatingButton
           icon={button.icon}
           text={button.title}

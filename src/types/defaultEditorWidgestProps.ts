@@ -110,7 +110,7 @@ export const HeaderToolsData: Omit<ButtonsMenuProps, "icon">[] = [
   {
     title: "JetBrains Mono",
     onClick: (editor) =>
-      editor.commands.setFontFamily("JetBrains Mono"),
+      editor.chain().focus().setFontFamily("JetBrains Mono").run(),
   },
   {
     title: "Merriweather",
@@ -130,5 +130,9 @@ export const HeaderToolsData: Omit<ButtonsMenuProps, "icon">[] = [
     title: "Fira Sans",
     onClick: (editor) =>
       editor.chain().focus().setFontFamily("Fira Sans").run(),
+  },
+  {
+    title: "Unset Font",
+    onClick: (editor) => editor.chain().focus().unsetFontFamily().run(),
   },
 ];
