@@ -19,6 +19,7 @@ import { useEditorStore } from "@/store/editorStore";
 import { HeaderTools } from "../header/headerTools";
 import { BubbleMenuComp } from "../menus/bubbleMenu";
 import Underline from "@tiptap/extension-underline";
+import { DownloadButton } from "../buttons/downloadButton";
 
 export function Editor() {
   const { setEditor } = useEditorStore();
@@ -98,6 +99,7 @@ export function Editor() {
           <BubbleMenuComp editor={tiptap} />
         </>
       )}
+    <DownloadButton />
     </main>
   );
 }
