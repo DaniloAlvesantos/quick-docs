@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // Extend Window interface to include adsbygoogle
 declare global {
@@ -10,6 +10,7 @@ declare global {
 
 const AdSenseHorizontal = () => {
   const adRef = useRef<HTMLElement>(null);
+  const [adInitialized, setAdInitialized] = useState(false);
 
   // Check if running on localhost
   const isLocalhost =
@@ -37,6 +38,19 @@ const AdSenseHorizontal = () => {
       document.head.appendChild(script);
     }
 
+    // Use ResizeObserver to ensure container has actual width before initializing
+    const resizeObserver = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        // Only initialize ad when container has width
+        if (entry.contentRect.width > 0 && !adInitialized) {
+          initAd();
+          setAdInitialized(true);
+          // Disconnect observer after successful initialization
+          resizeObserver.disconnect();
+        }
+      }
+    });
+
     // Initialize ads
     const initAd = () => {
       try {
@@ -50,16 +64,28 @@ const AdSenseHorizontal = () => {
       }
     };
 
-    // If script already loaded, init ad immediately
-    if (window.adsbygoogle) {
-      initAd();
-    } else {
-      // Otherwise wait for it to load
-      script.onload = initAd;
-    }
+    // First, wait for the script to load
+    const waitForScript = () => {
+      if (window.adsbygoogle) {
+        // Now observe the ad container for size
+        if (adRef.current) {
+          resizeObserver.observe(adRef.current);
+        }
+      } else {
+        // Script not loaded yet, retry in a moment
+        setTimeout(waitForScript, 50);
+      }
+    };
 
-    // No need to clean up the script as it should persist
-  }, [isLocalhost]);
+    // Start the process
+    script.onload = waitForScript;
+    waitForScript(); // Also try immediately in case script is already loaded
+
+    // Clean up
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [isLocalhost, adInitialized]);
 
   // Return a development placeholder if on localhost
   if (isLocalhost) {
@@ -80,17 +106,19 @@ const AdSenseHorizontal = () => {
           fontSize: "14px",
           color: "#666",
         }}
-      ></div>
+      >
+        AdSense Placeholder
+      </div>
     );
   }
 
   // Return actual AdSense component for production
   return (
-    <div className="ad-container">
+    <div className="ad-container" style={{ width: "100%", minHeight: "90px", display: "block" }}>
       <ins
         ref={adRef as React.RefObject<HTMLModElement>}
         className="adsbygoogle"
-        style={{ display: "block" }}
+        style={{ display: "block", minHeight: "90px", width: "100%" }}
         data-ad-client="ca-pub-5562152054851450"
         data-ad-slot="5178643206"
         data-ad-format="auto"
