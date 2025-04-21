@@ -20,6 +20,7 @@ import { HeaderTools } from "../header/headerTools";
 import { BubbleMenuComp } from "../menus/bubbleMenu";
 import Underline from "@tiptap/extension-underline";
 import { DownloadButton } from "../buttons/downloadButton";
+import AdSenseHorizontal from "../ads/horizontal";
 
 export function Editor() {
   const { setEditor } = useEditorStore();
@@ -30,6 +31,11 @@ export function Editor() {
         document: false,
         heading: {
           levels: [1, 2, 3, 4],
+        },
+        horizontalRule: {
+          HTMLAttributes: {
+            class: "marginY",
+          },
         },
       }),
       Document.extend({
@@ -57,7 +63,7 @@ export function Editor() {
         inline: true,
         allowBase64: true,
         HTMLAttributes: {
-          class: "rounded object-cover aspect-video",
+          class: "rounded object-cover aspect-video marginY",
         },
       }),
       TaskList,
@@ -99,7 +105,10 @@ export function Editor() {
           <BubbleMenuComp editor={tiptap} />
         </>
       )}
-    <DownloadButton />
+      <DownloadButton />
+      <div className="w-full flex justify-center items-center fixed bottom-0">
+        <AdSenseHorizontal />
+      </div>
     </main>
   );
 }

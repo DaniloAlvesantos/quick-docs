@@ -100,10 +100,22 @@ export function DownloadButton() {
           pdf.addPage();
         }
 
-        pdf.addImage(imgData, "JPEG", 0, 0, imgWidth, pageHeight, undefined, 'FAST');
+        pdf.addImage(
+          imgData,
+          "JPEG",
+          0,
+          0,
+          imgWidth,
+          pageHeight,
+          undefined,
+          "FAST"
+        );
         position += pageHeight;
       }
 
+      pdf.setDocumentProperties({
+        title: heading,
+      });
       pdf.save(filename);
     } catch (error) {
       console.error("Error generating PDF:", error);
