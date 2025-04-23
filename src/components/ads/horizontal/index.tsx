@@ -9,7 +9,7 @@ declare global {
 
 const AdSenseHorizontal = () => {
   const adRef = useRef<HTMLElement>(null);
-  
+
   const isLocalhost =
     typeof window !== "undefined" &&
     (window.location.hostname === "localhost" ||
@@ -17,14 +17,15 @@ const AdSenseHorizontal = () => {
 
   useEffect(() => {
     if (isLocalhost || !adRef.current) return;
-    
-    try {
-      // Initialize adsbygoogle if it hasn't been already
+    const script = document.createElement("script");
+    script.async = true;
+    script.src =
+      "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5562152054851450";
+    document.head.appendChild(script);
+    script.onload = () => {
       window.adsbygoogle = window.adsbygoogle || [];
       window.adsbygoogle.push({});
-    } catch (error) {
-      console.error("AdSense error:", error);
-    }
+    };
   }, [isLocalhost]);
 
   if (isLocalhost) {
@@ -51,7 +52,10 @@ const AdSenseHorizontal = () => {
   }
 
   return (
-    <div className="ad-container" style={{ width: "100%", minHeight: "90px", margin: "1rem 0" }}>
+    <div
+      className="ad-container"
+      style={{ width: "100%", minHeight: "90px", margin: "1rem 0" }}
+    >
       <ins
         ref={adRef as React.RefObject<HTMLModElement>}
         className="adsbygoogle"
