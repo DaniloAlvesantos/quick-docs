@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 declare global {
   interface Window {
@@ -14,19 +14,6 @@ const AdSenseHorizontal = () => {
     typeof window !== "undefined" &&
     (window.location.hostname === "localhost" ||
       window.location.hostname === "127.0.0.1");
-
-  useEffect(() => {
-    if (isLocalhost || !adRef.current) return;
-    const script = document.createElement("script");
-    script.async = true;
-    script.src =
-      "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5562152054851450";
-    document.head.appendChild(script);
-    script.onload = () => {
-      window.adsbygoogle = window.adsbygoogle || [];
-      window.adsbygoogle.push({});
-    };
-  }, [isLocalhost]);
 
   if (isLocalhost) {
     return (
